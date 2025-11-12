@@ -2,8 +2,8 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { SimpleGenerationType, StudyPack } from "./types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
-const proModel = 'gemini-2.5-pro';
-const flashModel = 'gemini-2.0-flash-exp';
+const primaryModel = 'gemini-2.0-flash-exp';
+const fallbackModel = 'gemini-2.5-flash';
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -174,7 +174,7 @@ export const generateTopicStudyPack = async (topic: string, exam: string, source
     try {
         return await retryWithBackoff(async () => {
             const response = await ai.models.generateContent({
-                model: proModel,
+                model: primaryModel,
                 contents: userPrompt,
                 config: {
                     systemInstruction: topicTutorSystemPrompt,
@@ -203,7 +203,7 @@ export const generateTopicStudyPack = async (topic: string, exam: string, source
             try {
                 return await retryWithBackoff(async () => {
                     const response = await ai.models.generateContent({
-                        model: flashModel,
+                        model: fallbackModel,
                         contents: userPrompt,
                         config: {
                             systemInstruction: topicTutorSystemPrompt,
@@ -260,7 +260,7 @@ export const generateSimpleContent = async (type: SimpleGenerationType, text: st
     try {
         return await retryWithBackoff(async () => {
             const response = await ai.models.generateContent({
-                model: proModel,
+                model: primaryModel,
                 contents: prompt,
                 config: {
                     responseMimeType: "application/json",
@@ -284,7 +284,7 @@ export const generateSimpleContent = async (type: SimpleGenerationType, text: st
             try {
                 return await retryWithBackoff(async () => {
                     const response = await ai.models.generateContent({
-                        model: flashModel,
+                        model: fallbackModel,
                         contents: prompt,
                         config: {
                             responseMimeType: "application/json",
