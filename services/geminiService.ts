@@ -1,7 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { SimpleGenerationType, StudyPack } from "./types.ts";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 const proModel = 'gemini-2.5-pro';
 
 // --- NEW: TOPIC TUTOR SERVICE ---
