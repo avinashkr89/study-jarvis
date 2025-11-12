@@ -1,8 +1,48 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { SimpleGenerationType, StudyPack } from "./types.ts";
+import { SimpleGenerationType, StudyPack } from "./types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 const proModel = 'gemini-2.5-pro';
+const flashModel = 'gemini-2.0-flash-exp';
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function retryWithBackoff<T>(
+    fn: () => Promise<T>,
+    maxRetries: number = 5,
+    initialDelay: number = 2000
+): Promise<T> {
+    let lastError: any;
+    
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+            return await fn();
+        } catch (error: any) {
+            lastError = error;
+            const errorMsg = error?.message || String(error);
+            
+            const isRetryable = 
+                errorMsg.includes('503') || 
+                errorMsg.includes('overloaded') ||
+                errorMsg.includes('429') ||
+                errorMsg.includes('RESOURCE_EXHAUSTED') ||
+                errorMsg.includes('UNAVAILABLE');
+            
+            if (!isRetryable || attempt === maxRetries - 1) {
+                throw error;
+            }
+            
+            const delay = initialDelay * Math.pow(2, attempt);
+            const jitter = Math.random() * 1000;
+            const totalDelay = delay + jitter;
+            
+            console.warn(`Gemini API error (attempt ${attempt + 1}/${maxRetries}): ${errorMsg}. Retrying in ${Math.round(totalDelay/1000)}s...`);
+            await sleep(totalDelay);
+        }
+    }
+    
+    throw lastError;
+}
 
 // --- NEW: TOPIC TUTOR SERVICE ---
 
@@ -129,32 +169,60 @@ const getTopicTutorSchema = () => ({
 });
 
 export const generateTopicStudyPack = async (topic: string, exam: string, sources: any[]): Promise<StudyPack> => {
-    try {
-        const userPrompt = `Generate a study pack for the topic "${topic}" for a student preparing for the "${exam}" exam. Use the following sources as context if needed: ${JSON.stringify(sources.map(s => ({ title: s.title, url: s.url })))}. Fulfill all sections as requested in the system prompt.`;
+    const userPrompt = `Generate a study pack for the topic "${topic}" for a student preparing for the "${exam}" exam. Use the following sources as context if needed: ${JSON.stringify(sources.map(s => ({ title: s.title, url: s.url })))}. Fulfill all sections as requested in the system prompt.`;
 
-        const response = await ai.models.generateContent({
-            model: proModel,
-            contents: userPrompt,
-            config: {
-                systemInstruction: topicTutorSystemPrompt,
-                responseMimeType: "application/json",
-                responseSchema: getTopicTutorSchema(),
-                temperature: 0.6,
-                topK: 40,
-                topP: 0.95,
+    try {
+        return await retryWithBackoff(async () => {
+            const response = await ai.models.generateContent({
+                model: proModel,
+                contents: userPrompt,
+                config: {
+                    systemInstruction: topicTutorSystemPrompt,
+                    responseMimeType: "application/json",
+                    responseSchema: getTopicTutorSchema(),
+                    temperature: 0.6,
+                    topK: 40,
+                    topP: 0.95,
+                }
+            });
+            
+            const jsonString = response.text.trim();
+            if (!jsonString) {
+                throw new Error("Empty response from API");
             }
+            
+            return JSON.parse(jsonString);
         });
+
+    } catch (error: any) {
+        console.error(`Error generating topic study pack after retries:`, error);
         
-        const jsonString = response.text.trim();
-        if (!jsonString) {
-            throw new Error("Empty response from API");
+        const errorMsg = error?.message || String(error);
+        if (errorMsg.includes('overloaded') || errorMsg.includes('503')) {
+            console.log('Trying fallback to Flash model...');
+            try {
+                return await retryWithBackoff(async () => {
+                    const response = await ai.models.generateContent({
+                        model: flashModel,
+                        contents: userPrompt,
+                        config: {
+                            systemInstruction: topicTutorSystemPrompt,
+                            responseMimeType: "application/json",
+                            responseSchema: getTopicTutorSchema(),
+                            temperature: 0.6,
+                        }
+                    });
+                    
+                    const jsonString = response.text.trim();
+                    if (!jsonString) throw new Error("Empty response from API");
+                    return JSON.parse(jsonString);
+                }, 3);
+            } catch (fallbackError) {
+                console.error('Fallback model also failed:', fallbackError);
+            }
         }
         
-        return JSON.parse(jsonString);
-
-    } catch (error) {
-        console.error(`Error generating topic study pack:`, error);
-        throw new Error('Failed to generate study pack. The model may be overloaded or the topic is too complex. Please try again later.');
+        throw new Error('Failed to generate study pack. The AI service is currently experiencing high demand. Please try again in a few minutes.');
     }
 };
 
@@ -186,27 +254,54 @@ const getSimplePrompt = (type: SimpleGenerationType, text: string) => {
 };
 
 export const generateSimpleContent = async (type: SimpleGenerationType, text: string): Promise<any> => {
-    try {
-        const prompt = getSimplePrompt(type, text);
-        const schema = getSimpleResponseSchema(type);
+    const prompt = getSimplePrompt(type, text);
+    const schema = getSimpleResponseSchema(type);
 
-        const response = await ai.models.generateContent({
-            model: proModel,
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-                responseSchema: schema,
-                temperature: 0.5,
-            }
+    try {
+        return await retryWithBackoff(async () => {
+            const response = await ai.models.generateContent({
+                model: proModel,
+                contents: prompt,
+                config: {
+                    responseMimeType: "application/json",
+                    responseSchema: schema,
+                    temperature: 0.5,
+                }
+            });
+
+            const jsonString = response.text.trim();
+            if (!jsonString) throw new Error("Empty response from API");
+            
+            return JSON.parse(jsonString);
         });
 
-        const jsonString = response.text.trim();
-        if (!jsonString) { throw new Error("Empty response from API"); }
+    } catch (error: any) {
+        console.error(`Error generating simple content for type ${type} after retries:`, error);
         
-        return JSON.parse(jsonString);
-
-    } catch (error) {
-        console.error(`Error generating simple content for type ${type}:`, error);
-        throw new Error('Failed to generate content. The model may be overloaded or the input content is too complex. Please try again.');
+        const errorMsg = error?.message || String(error);
+        if (errorMsg.includes('overloaded') || errorMsg.includes('503')) {
+            console.log('Trying fallback to Flash model...');
+            try {
+                return await retryWithBackoff(async () => {
+                    const response = await ai.models.generateContent({
+                        model: flashModel,
+                        contents: prompt,
+                        config: {
+                            responseMimeType: "application/json",
+                            responseSchema: schema,
+                            temperature: 0.5,
+                        }
+                    });
+                    
+                    const jsonString = response.text.trim();
+                    if (!jsonString) throw new Error("Empty response from API");
+                    return JSON.parse(jsonString);
+                }, 3);
+            } catch (fallbackError) {
+                console.error('Fallback model also failed:', fallbackError);
+            }
+        }
+        
+        throw new Error('Failed to generate content. The AI service is currently experiencing high demand. Please try again in a few minutes.');
     }
 };
