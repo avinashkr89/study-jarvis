@@ -1,0 +1,5 @@
+{
+  "name": "StudyJARVIS: AI Video Study Assistant",
+  "description": "An AI-powered study assistant that analyzes videos to generate comprehensive study packs, including summaries, quizzes, flashcards, and mnemonics, tailored for students using Gemini Pro.",
+  "requestFramePermissions": []
+}

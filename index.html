@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudyJARVIS: Your Smartest Study Partner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.0",
+    "react-dropzone": "https://aistudiocdn.com/react-dropzone@^14.3.8"
+  }
+}
+</script>
+    <style>
+      :root {
+        --primary-blue: #0048BA;
+        --accent-purple: #A259FF;
+        --text-dark: #0F172A;
+        --text-light: #E2E8F0;
+        --bg-dark: #020617;
+        --bg-light: #F1F5F9;
+      }
+      body {
+        font-family: 'Poppins', sans-serif;
+      }
+      .dark .dark-gradient-bg {
+        background-color: var(--bg-dark);
+        background-image: radial-gradient(at 27% 37%, hsla(215, 98%, 36%, 0.15) 0px, transparent 50%), 
+                          radial-gradient(at 97% 21%, hsla(265, 98%, 68%, 0.1) 0px, transparent 50%),
+                          radial-gradient(at 70% 97%, hsla(215, 98%, 36%, 0.1) 0px, transparent 50%);
+      }
+      .light .light-gradient-bg {
+        background-color: var(--bg-light);
+         background-image: radial-gradient(at 27% 37%, hsla(215, 98%, 36%, 0.05) 0px, transparent 50%), 
+                          radial-gradient(at 97% 21%, hsla(265, 98%, 68%, 0.05) 0px, transparent 50%);
+      }
+      .glass-card {
+        background: rgba(15, 23, 42, 0.3); /* Dark mode default */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .light .glass-card {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(0, 72, 186, 0.15);
+      }
+
+      .fade-in {
+        animation: fadeInAnimation 0.5s ease-in-out forwards;
+      }
+      @keyframes fadeInAnimation {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      .glow-effect {
+        box-shadow: 0 0 15px 2px rgba(0, 72, 186, 0.4), 0 0 30px 5px rgba(162, 89, 255, 0.2);
+      }
+
+      /* Styles for Flashcard Flip Animation */
+      .flip-card {
+        perspective: 1000px;
+        background-color: transparent;
+      }
+      .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+      }
+      .flip-card.flipped .flip-card-inner {
+        transform: rotateY(180deg);
+      }
+      .flip-card-front, .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        border-radius: 1rem; /* match card rounding */
+      }
+      .flip-card-back {
+        transform: rotateY(180deg);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
