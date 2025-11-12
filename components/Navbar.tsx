@@ -1,10 +1,11 @@
+
 import React from 'react';
-import { Page, User } from '../types';
-import UserIcon from './icons/UserIcon';
-import CoinIcon from './icons/CoinIcon';
-import LogoutIcon from './icons/LogoutIcon';
-import SunIcon from './icons/SunIcon';
-import MoonIcon from './icons/MoonIcon';
+import { Page, User } from '../types.ts';
+import UserIcon from './icons/UserIcon.tsx';
+import CoinIcon from './icons/CoinIcon.tsx';
+import LogoutIcon from './icons/LogoutIcon.tsx';
+import SunIcon from './icons/SunIcon.tsx';
+import MoonIcon from './icons/MoonIcon.tsx';
 
 interface NavbarProps {
   user: User | null;

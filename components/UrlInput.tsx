@@ -1,5 +1,6 @@
+
 import React from 'react';
-import LinkIcon from './icons/LinkIcon';
+import LinkIcon from './icons/LinkIcon.tsx';
 
 interface UrlInputProps {
   url: string;

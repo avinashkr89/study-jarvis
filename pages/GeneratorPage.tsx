@@ -1,20 +1,21 @@
+
 import React, { useState } from 'react';
-import { SimpleGenerationType, SimpleGenerationResult, StudyPack, SourceRef } from '../types';
-import { generateTopicStudyPack, generateSimpleContent } from '../services/geminiService';
-import { extractTextFromUrl } from '../utils/youtube';
+import { SimpleGenerationType, SimpleGenerationResult, StudyPack, SourceRef } from '../types.ts';
+import { generateTopicStudyPack, generateSimpleContent } from '../services/geminiService.ts';
+import { extractTextFromUrl } from '../utils/youtube.ts';
 
-import FileUpload from '../components/FileUpload';
-import UrlInput from '../components/UrlInput';
-import Loader from '../components/Loader';
-import ResultsDisplay from '../components/ResultsDisplay';
-import SimpleResultsDisplay from '../components/SimpleResultsDisplay';
+import FileUpload from '../components/FileUpload.tsx';
+import UrlInput from '../components/UrlInput.tsx';
+import Loader from '../components/Loader.tsx';
+import ResultsDisplay from '../components/ResultsDisplay.tsx';
+import SimpleResultsDisplay from '../components/SimpleResultsDisplay.tsx';
 
-import SummaryIcon from '../components/icons/SummaryIcon';
-import KeyTermsIcon from '../components/icons/KeyTermsIcon';
-import QuizIcon from '../components/icons/QuizIcon';
-import FlashcardIcon from '../components/icons/FlashcardIcon';
-import MnemonicIcon from '../components/icons/MnemonicIcon';
-import VideoIcon from '../components/icons/VideoIcon';
+import SummaryIcon from '../components/icons/SummaryIcon.tsx';
+import KeyTermsIcon from '../components/icons/KeyTermsIcon.tsx';
+import QuizIcon from '../components/icons/QuizIcon.tsx';
+import FlashcardIcon from '../components/icons/FlashcardIcon.tsx';
+import MnemonicIcon from '../components/icons/MnemonicIcon.tsx';
+import VideoIcon from '../components/icons/VideoIcon.tsx';
 
 interface GeneratorPageProps {
   credits: number;

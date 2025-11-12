@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Page } from '../types';
+import { Page } from '../types.ts';
 
 interface LandingPageProps {
   navigate: (page: Page) => void;

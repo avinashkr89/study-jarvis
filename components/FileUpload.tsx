@@ -1,6 +1,7 @@
+
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import LinkIcon from './icons/LinkIcon';
+import LinkIcon from './icons/LinkIcon.tsx';
 
 const FileUpload: React.FC<{ onFileRead: (text: string) => void; }> = ({ onFileRead }) => {
     const [error, setError] = useState('');

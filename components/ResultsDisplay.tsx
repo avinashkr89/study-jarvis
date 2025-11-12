@@ -1,5 +1,6 @@
+
 import React, { useState, useMemo } from 'react';
-import { StudyPack, MCQ } from '../types';
+import { StudyPack, MCQ } from '../types.ts';
 
 interface ResultsDisplayProps {
   results: StudyPack;

@@ -1,6 +1,7 @@
+
 import React from 'react';
-import { User, Page } from '../types';
-import CoinIcon from '../components/icons/CoinIcon';
+import { User, Page } from '../types.ts';
+import CoinIcon from '../components/icons/CoinIcon.tsx';
 
 interface DashboardPageProps {
   user: User | null;

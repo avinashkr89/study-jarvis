@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Page, User, PaymentRequest } from './types';
-import { useLocalStorage } from './hooks/useLocalStorage';
 
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import LandingPage from './pages/LandingPage';
-import DashboardPage from './pages/DashboardPage';
-import GeneratorPage from './pages/GeneratorPage';
-import PricingPage from './pages/PricingPage';
-import ContactPage from './pages/ContactPage';
-import AuthPage from './pages/AuthPage';
-import AdminPage from './pages/AdminPage';
+import React, { useState, useEffect } from 'react';
+import { Page, User, PaymentRequest } from './types.ts';
+import { useLocalStorage } from './hooks/useLocalStorage.ts';
+
+import Navbar from './components/Navbar.tsx';
+import Footer from './components/Footer.tsx';
+import LandingPage from './pages/LandingPage.tsx';
+import DashboardPage from './pages/DashboardPage.tsx';
+import GeneratorPage from './pages/GeneratorPage.tsx';
+import PricingPage from './pages/PricingPage.tsx';
+import ContactPage from './pages/ContactPage.tsx';
+import AuthPage from './pages/AuthPage.tsx';
+import AdminPage from './pages/AdminPage.tsx';
 
 function App() {
   const [theme, setTheme] = useLocalStorage<'light' | 'dark'>('theme', 'dark');

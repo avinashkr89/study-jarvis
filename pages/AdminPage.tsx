@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { User, PaymentRequest } from '../types';
+import { User, PaymentRequest } from '../types.ts';
 
 type AdminTab = 'users' | 'payments';
 
