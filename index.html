@@ -8,26 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-      // Polyfill process.env for browser environment to prevent crash
-      if (typeof window.process === 'undefined') {
-        window.process = { env: {} };
-      }
-    </script>
-    <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@18.2.0",
-        "react/": "https://esm.sh/react@18.2.0/",
-        "react-dom": "https://esm.sh/react-dom@18.2.0",
-        "react-dom/": "https://esm.sh/react-dom@18.2.0/",
-        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-        "@google/genai": "https://esm.sh/@google/genai@^1.29.0",
-        "react-dropzone": "https://esm.sh/react-dropzone@^14.3.8"
-      }
-    }
-    </script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
       :root {
         --primary-blue: #0048BA;
@@ -52,7 +32,7 @@
                           radial-gradient(at 97% 21%, hsla(265, 98%, 68%, 0.05) 0px, transparent 50%);
       }
       .glass-card {
-        background: rgba(15, 23, 42, 0.3); /* Dark mode default */
+        background: rgba(15, 23, 42, 0.3);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -76,7 +56,6 @@
         box-shadow: 0 0 15px 2px rgba(0, 72, 186, 0.4), 0 0 30px 5px rgba(162, 89, 255, 0.2);
       }
 
-      /* Styles for Flashcard Flip Animation */
       .flip-card {
         perspective: 1000px;
         background-color: transparent;
@@ -97,7 +76,7 @@
         height: 100%;
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
-        border-radius: 1rem; /* match card rounding */
+        border-radius: 1rem;
       }
       .flip-card-back {
         transform: rotateY(180deg);
@@ -106,22 +85,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="text/babel" data-type="module">
-      import React from 'react';
-      import ReactDOM from 'react-dom/client';
-      import App from './App.tsx';
-
-      const rootElement = document.getElementById('root');
-      if (!rootElement) {
-        throw new Error("Could not find root element to mount to");
-      }
-
-      const root = ReactDOM.createRoot(rootElement);
-      root.render(
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      );
-    </script>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

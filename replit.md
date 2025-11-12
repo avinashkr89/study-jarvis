@@ -45,11 +45,15 @@ StudyJARVIS is an AI-powered study assistant that helps students generate study 
 - **Run**: Vite preview server on port 5000
 
 ## Recent Changes
-- **2025-11-12**: Initial Replit setup
+- **2025-11-12**: Initial Replit setup and migration
+  - Migrated from browser-based module loading (importmap + Babel) to Vite bundling
+  - Created proper `index.tsx` entry point for Vite
   - Configured Vite to use port 5000 for Replit compatibility
-  - Added HMR client port configuration for Replit proxy
+  - Added `allowedHosts: true` to Vite config for Replit proxy support
+  - Added HMR client port configuration for Replit proxy (clientPort: 443)
+  - Installed React TypeScript definitions (@types/react, @types/react-dom)
   - Set up workflow for development server
-  - Configured deployment settings for autoscale
+  - Configured deployment settings for autoscale deployment
   - Added GEMINI_API_KEY secret management
 
 ## Development
