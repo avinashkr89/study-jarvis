@@ -2,8 +2,8 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { SimpleGenerationType, StudyPack } from "./types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
-const primaryModel = 'gemini-2.0-flash-exp';
-const fallbackModel = 'gemini-2.5-flash';
+const primaryModel = 'gemini-1.5-flash';
+const fallbackModel = 'gemini-1.5-flash-8b';
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 

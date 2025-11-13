@@ -56,10 +56,12 @@ StudyJARVIS is an AI-powered study assistant that helps students generate study 
   - Configured deployment settings for autoscale deployment
   - Added GEMINI_API_KEY secret management
   - **AI Service Improvements**:
-    - Switched primary model to Gemini 2.0 Flash (better rate limits on free tier: 15 RPM vs 5 RPM)
+    - Switched to stable Gemini 1.5 Flash model (better availability, less "high demand" errors)
+    - Fallback to Gemini 1.5 Flash-8B (lighter, faster model)
     - Added automatic retry logic with exponential backoff for API errors
-    - Implemented dual-model fallback system (Flash → Flash-Lite)
+    - Implemented dual-model fallback system for reliability
     - Added smart error handling for 503 (overloaded) and 429 (rate limit) errors
+    - Free tier: 15 requests/minute, 1,500 requests/day
   - **Netlify Deployment**:
     - Created `netlify.toml` with proper build configuration
     - Added `public/_redirects` for React Router support
